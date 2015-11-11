@@ -1,3 +1,6 @@
+from itertools import izip
+
+
 def fixed_xor(first_bytestring, second_bytestring):
     return ''.join(chr(x ^ y) for x, y in zip(first_bytestring, second_bytestring))
 
@@ -38,11 +41,6 @@ def score_string(string):
     return score
 
 
-def hamming_distance(string1, string2):
-    bytes1 = bytearray(string1)
-    bytes2 = bytearray(string2)
-    diffs = 0
-    for ch1, ch2 in zip(bytes1, bytes2):
-        if ch1 != ch2:
-            diffs += 1
-    return diffs
+def hamming_distance(bytearray1, bytearray2):
+    return sum(bin(i ^ j).count("1") for i, j in zip(bytearray1, bytearray2))
+
