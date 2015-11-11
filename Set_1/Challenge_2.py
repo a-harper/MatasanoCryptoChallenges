@@ -22,5 +22,6 @@ print b1
 print b2
 
 output = fixed_xor(b1, b2)
+print output
 
-print binascii.b2a_hex(output).decode()
+print binascii.hexlify(bytearray(output))
