@@ -2,6 +2,14 @@ def fixed_xor(first_bytestring, second_bytestring):
     return ''.join(chr(x ^ y) for x, y in zip(first_bytestring, second_bytestring))
 
 
+def repeating_key_xor(string, key):
+    key_padded = (key * ((len(string)/len(key))+1))[:len(string)]
+    string_bytes = bytearray(string)
+    key_bytes = bytearray(key_padded)
+
+    return fixed_xor(string_bytes, key_bytes)
+
+
 def single_byte_bruteforce(string, char):
     string_bytes = bytearray.fromhex(string)
     char_byte = bytearray(char)
