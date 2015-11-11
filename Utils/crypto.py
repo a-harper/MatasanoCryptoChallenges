@@ -36,3 +36,13 @@ def score_string(string):
         elif ascii_value < 255:
             score -= 5
     return score
+
+
+def hamming_distance(string1, string2):
+    bytes1 = bytearray(string1)
+    bytes2 = bytearray(string2)
+    diffs = 0
+    for ch1, ch2 in zip(bytes1, bytes2):
+        if ch1 != ch2:
+            diffs += 1
+    return diffs
