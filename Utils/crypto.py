@@ -5,19 +5,17 @@ def fixed_xor(first_bytestring, second_bytestring):
     return ''.join(chr(x ^ y) for x, y in zip(first_bytestring, second_bytestring))
 
 
-def repeating_key_xor(string, key):
-    key_padded = (key * ((len(string)/len(key))+1))[:len(string)]
-    string_bytes = bytearray(string)
+def repeating_key_xor(b_array, key):
+    key_padded = (key * ((len(b_array)/len(key))+1))[:len(b_array)]
     key_bytes = bytearray(key_padded)
 
-    return fixed_xor(string_bytes, key_bytes)
+    return fixed_xor(b_array, key_bytes)
 
 
-def single_byte_bruteforce(string, char):
-    string_bytes = bytearray.fromhex(string)
+def single_byte_bruteforce(b_array, char):
     char_byte = bytearray(char)
     output_bytes = b''
-    for x in string_bytes:
+    for x in b_array:
         output_bytes += chr(x ^ char_byte[0])
     return output_bytes
 
@@ -57,6 +55,6 @@ def chunker(s, n):
     """
     for i in xrange(0, len(s), n):
         ret = s[i:i+n]
-        if len(ret) < 29:
-            ret += '\x00' * (29 - len(ret))
+        if len(ret) < n:
+            ret += '\x00' * (n - len(ret))
         yield ret

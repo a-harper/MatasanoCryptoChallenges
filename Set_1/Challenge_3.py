@@ -9,7 +9,7 @@ input_string = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b
 result_list = []
 
 for i in range(0, 255):
-    result = single_byte_bruteforce(input_string, chr(i))
+    result = single_byte_bruteforce(bytearray.fromhex(input_string), chr(i))
     if len(result) > 0:
         score = score_string(result)
         result_list.append((result, score))

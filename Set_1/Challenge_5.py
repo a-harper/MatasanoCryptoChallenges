@@ -25,6 +25,6 @@ key = "ICE"
 
 input_string = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
 
-output1 = binascii.b2a_hex(repeating_key_xor(input_string, key))
+output1 = binascii.b2a_hex(repeating_key_xor(bytearray(input_string), key))
 
 print output1
