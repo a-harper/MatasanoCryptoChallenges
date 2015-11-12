@@ -34,5 +34,5 @@ raw_string = bytearray(base64.b64decode(input_file))
 # Get 29 len chunks
 
 chunks = chunker(raw_string, 29)
-transposed_blocks = [x[i] for x in chunks for i in range(0, len(x) - 1)]
+transposed_blocks = zip(*chunks)
 print "Oh god"

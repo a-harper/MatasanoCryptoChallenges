@@ -56,4 +56,7 @@ def chunker(s, n):
     :return: chunk
     """
     for i in xrange(0, len(s), n):
-        yield s[i:i+n]
+        ret = s[i:i+n]
+        if len(ret) < 29:
+            ret += '\x00' * (29 - len(ret))
+        yield ret
