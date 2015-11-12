@@ -47,3 +47,13 @@ def hamming_distance(bytearray1, bytearray2):
 
 def slicer(string, slicesize, n):
     return [string[x:x+slicesize] for x in xrange(0, n*slicesize, slicesize)]
+
+
+def chunker(s, n):
+    """ Yield successive chunks from l.
+    :param s: input
+    :param n: chunk size
+    :return: chunk
+    """
+    for i in xrange(0, len(s), n):
+        yield s[i:i+n]
