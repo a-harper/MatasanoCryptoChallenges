@@ -24,7 +24,7 @@ l_num = 0
 for line in text:
     decoded = bytearray.fromhex(line)
     blocks = crypto.slicer(decoded, 16, (len(decoded) / 16))
-    score = crypto.score_ECB(blocks)
+    score = crypto.score_ecb(blocks)
     if score > 0:
         print "Match on line {0} with score {1}".format(l_num, score)
         print line

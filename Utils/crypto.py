@@ -59,7 +59,7 @@ def chunker(s, n):
         yield ret
 
 
-def score_ECB(b_arraylist):
+def score_ecb(b_arraylist):
     pairs = itertools.combinations(b_arraylist, 2)
     return sum([(1 if (p[0] == p[1]) else 0) for p in pairs])
 
