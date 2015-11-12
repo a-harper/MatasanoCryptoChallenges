@@ -64,3 +64,7 @@ def score_ecb(b_arraylist):
     return sum([(1 if (p[0] == p[1]) else 0) for p in pairs])
 
 
+def pad_block(block, desired_length, padchars='\x04'):
+    b_array = bytearray(block)
+    b_array += padchars * (desired_length - len(b_array))
+    return b_array
