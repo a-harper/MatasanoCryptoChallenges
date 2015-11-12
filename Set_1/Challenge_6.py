@@ -18,7 +18,7 @@ raw_string = bytearray(base64.b64decode(input_file))
 hams = []
 
 for i in range(2, 41):
-    segments = slicer(raw_string, i, 4)
+    segments = slicer(raw_string, i, 50)
     combine = itertools.combinations(segments, 2)
     hamscore = 0
     for s1, s2 in combine:
@@ -26,5 +26,7 @@ for i in range(2, 41):
     hamscore /= 6
     hams.append((hamscore, i))
 
-hams.sort(key=itemgetter(1), reverse=True)
-print hams[:15]
+hams.sort(key=itemgetter(0))
+print hams
+
+# Keysize is probably 29

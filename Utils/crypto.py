@@ -46,7 +46,4 @@ def hamming_distance(bytearray1, bytearray2):
 
 
 def slicer(string, slicesize, n):
-    return_list = []
-    for x in range(0, n - 1):
-        return_list.append(string[x * slicesize:((x + 1) * slicesize)])
-    return return_list
+    return [string[x:x+slicesize] for x in xrange(0, n*slicesize, slicesize)]
