@@ -1,5 +1,4 @@
-from itertools import izip
-
+import itertools
 
 def fixed_xor(first_bytestring, second_bytestring):
     return ''.join(chr(x ^ y) for x, y in zip(first_bytestring, second_bytestring))
@@ -58,3 +57,10 @@ def chunker(s, n):
         if len(ret) < n:
             ret += '\x00' * (n - len(ret))
         yield ret
+
+
+def score_ECB(b_arraylist):
+    pairs = itertools.combinations(b_arraylist, 2)
+    return sum([(1 if (p[0] == p[1]) else 0) for p in pairs])
+
+
