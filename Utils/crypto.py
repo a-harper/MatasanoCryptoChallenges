@@ -1,4 +1,5 @@
 import itertools
+from Crypto.Cipher import AES
 
 def fixed_xor(first_bytestring, second_bytestring):
     return ''.join(chr(x ^ y) for x, y in zip(first_bytestring, second_bytestring))
@@ -46,15 +47,16 @@ def slicer(string, slicesize, n):
     return [string[x:x+slicesize] for x in xrange(0, n*slicesize, slicesize)]
 
 
-def chunker(s, n):
+def chunker(s, n, pad=True):
     """ Yield successive chunks from l.
     :param s: input
     :param n: chunk size
+    :param pad: pad last string to length
     :return: chunk
     """
     for i in xrange(0, len(s), n):
         ret = s[i:i+n]
-        if len(ret) < n:
+        if len(ret) < n and pad:
             ret += '\x00' * (n - len(ret))
         yield ret
 
@@ -68,3 +70,27 @@ def pad_block(block, desired_length, padchars='\x04'):
     b_array = bytearray(block)
     b_array += padchars * (desired_length - len(b_array))
     return b_array
+
+
+def encrypt_cbc(text, iv, key):
+    blocks = chunker(text, 16)
+    cipher = AES.new(key, AES.MODE_ECB)
+    ciphertext = b''
+    previous = iv
+    for block in blocks:
+        cipherblock = cipher.encrypt(fixed_xor(bytearray(previous), bytearray(block)))
+        ciphertext += cipherblock
+        previous = cipherblock
+    return ciphertext
+
+
+def decrypt_cbc(text, iv, key):
+    blocks = chunker(text, 16)
+    cipher = AES.new(key, AES.MODE_ECB)
+    plaintext = b''
+    previous = iv
+    for block in blocks:
+        plainblock = fixed_xor(bytearray(cipher.decrypt(buffer(block))), previous)
+        plaintext += plainblock
+        previous = block
+    return plaintext
