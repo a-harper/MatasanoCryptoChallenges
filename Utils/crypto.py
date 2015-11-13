@@ -1,5 +1,6 @@
 import itertools
 from Crypto.Cipher import AES
+import random
 
 def fixed_xor(first_bytestring, second_bytestring):
     return ''.join(chr(x ^ y) for x, y in zip(first_bytestring, second_bytestring))
@@ -66,9 +67,9 @@ def score_ecb(b_arraylist):
     return sum([(1 if (p[0] == p[1]) else 0) for p in pairs])
 
 
-def pad_block(block, desired_length, padchars='\x04'):
+def pad_block(block, desired_length, padchars='\x04', plain=False):
     b_array = bytearray(block)
-    b_array += padchars * (desired_length - len(b_array))
+    b_array += padchars * (desired_length - (len(block) if plain else len(b_array)))
     return b_array
 
 
@@ -94,3 +95,39 @@ def decrypt_cbc(text, iv, key):
         plaintext += plainblock
         previous = block
     return plaintext
+
+
+def to_bytes(n, length, endianness='big'):
+    h = '%x' % n
+    s = ('0'*(len(h) % 2) + h).zfill(length*2).decode('hex')
+    return s if endianness == 'big' else s[::-1]
+
+
+def generate_bytes(n):
+    return to_bytes(random.getrandbits(8*n), n)
+
+
+def encryption_oracle(text):
+    prepend = generate_bytes(random.randrange(5, 11))
+    append = generate_bytes(random.randrange(5, 11))
+    plaintext = prepend + text + append
+    if len(plaintext) % 16 != 0:
+        plaintext = str(pad_block(plaintext, len(plaintext) + (16 - (len(plaintext) % 16)), plain=True))
+    key = generate_bytes(16)
+    iv = generate_bytes(16)
+    cipher = AES.new(key, AES.MODE_ECB)
+    if random.randrange(2):
+        print 'Encrypting with CBC'
+        return bytearray(encrypt_cbc(plaintext, iv, key))
+    else:
+        print 'Encrypting with EBC'
+        return bytearray(cipher.encrypt(str(plaintext)))
+    # return bytearray(encrypt_cbc(plaintext, iv, key) if random.randrange(2) else cipher.encrypt(plaintext))
+
+
+def detection_oracle():
+    s = bytearray([0] * 47)
+    t = encryption_oracle(s)
+    if score_ecb(chunker(t, 16)) > 0:
+        return 'ECB Score: ' + str(score_ecb(chunker(t, 16)))
+    return 'CBC'

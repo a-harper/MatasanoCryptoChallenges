@@ -32,8 +32,6 @@ y = crypto.encrypt_cbc(x,
                        bytearray([0] * 16),
                        b'YELLOW SUBMARINE')
 
-print y
-
 if y != decoded_ciphertext:
     print "Doesn't match."
 else:
