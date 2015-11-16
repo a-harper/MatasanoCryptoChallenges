@@ -32,5 +32,4 @@ with open(text) as f:
 decoded = base64.b64decode(stuff)
 
 # encrypted = crypto.encryption_oracle(decoded)
-
-print crypto.detection_oracle()
+print crypto.detection_oracle(crypto.encryption_oracle)

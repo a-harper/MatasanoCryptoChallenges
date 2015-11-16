@@ -1,6 +1,8 @@
 import itertools
 from Crypto.Cipher import AES
 import random
+import base64
+
 
 def fixed_xor(first_bytestring, second_bytestring):
     return ''.join(chr(x ^ y) for x, y in zip(first_bytestring, second_bytestring))
@@ -125,9 +127,31 @@ def encryption_oracle(text):
     # return bytearray(encrypt_cbc(plaintext, iv, key) if random.randrange(2) else cipher.encrypt(plaintext))
 
 
-def detection_oracle():
+def detection_oracle(funct):
     s = bytearray([0] * 47)
-    t = encryption_oracle(s)
+    t = funct(s)
     if score_ecb(chunker(t, 16)) > 0:
         return 'ECB Score: ' + str(score_ecb(chunker(t, 16)))
     return 'CBC'
+
+
+def encryption_oracle2(text, key):
+    appender = 'Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzd' \
+               'GFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK'
+    to_append = base64.b64decode(appender)
+    s = text + to_append
+    plaintext = pad_block(s, len(s) + (16 - (len(s) % 16)))
+    cipher = AES.new(key, AES.MODE_ECB)
+    return bytearray(cipher.encrypt(str(plaintext)))
+
+
+def brute_ecb_character(funct, key, n, discovered=""):
+    one_byte_short = 'A' * (16 - n) + discovered
+    print one_byte_short
+    output = funct(one_byte_short, key)[0:16]  # Output now contains our string + n characters from the secret
+    for i in range(0, 256):
+        check = funct(one_byte_short + chr(i), key)[0:16]
+        if check == output:
+            print "Char in {0} position = {1}".format(n, chr(i))
+            return chr(i)
+
