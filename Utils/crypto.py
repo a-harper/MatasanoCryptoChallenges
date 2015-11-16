@@ -146,12 +146,19 @@ def encryption_oracle2(text, key):
 
 
 def brute_ecb_character(funct, key, n, discovered=""):
-    one_byte_short = 'A' * (16 - n) + discovered
-    print one_byte_short
-    output = funct(one_byte_short, key)[0:16]  # Output now contains our string + n characters from the secret
-    for i in range(0, 256):
-        check = funct(one_byte_short + chr(i), key)[0:16]
-        if check == output:
-            print "Char in {0} position = {1}".format(n, chr(i))
-            return chr(i)
+    if n <= 16:
+        one_byte_short = 'A' * (16 - n)
+        output = funct(one_byte_short, key)[0:16]
+        for i in range(0, 256):
+            check = funct(one_byte_short + discovered + chr(i), key)[0:16]
+            if check == output:
+                print "Char in {0} position = {1}".format(n, chr(i))
+                return chr(i)
+    else:
+        output = funct(b'', key)[0:n]
+        for i in range(0, 256):
+            check = funct(discovered + chr(i), key)[0:n]
+            if check == output:
+                print "Char in {0} position = {1}".format(n, chr(i))
+                return chr(i)
 

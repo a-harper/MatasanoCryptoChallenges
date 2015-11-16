@@ -60,12 +60,14 @@ def find_block_size():
 block_size = find_block_size()
 print block_size
 
+print 'Number of blocks: ' + str(len(crypto.encryption_oracle2(b'', key)) / block_size)
+
 # Check for ECB
 if crypto.score_ecb(crypto.encryption_oracle2(bytearray([0] * 47), key)) >= 1:
     print "ECB"
 
 discovered = ""
-for n in range(1, 17):
+for n in range(1, len(crypto.encryption_oracle2(b'', key)) + 1):
     discovered += crypto.brute_ecb_character(crypto.encryption_oracle2, key, n, discovered)
 print discovered
 
