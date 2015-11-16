@@ -158,3 +158,12 @@ def brute_ecb_character(funct, key, n, discovered=""):
         "Fuck it."
 
 
+def brute_ecb_character2(funct, key, n, discovered=""):
+    prefix = b'A' * (16 - (len(discovered) % 16) - 1)
+    offset = len(discovered) / 16
+    output = funct(prefix, key)[offset*16:offset*16+16]
+    for i in range(0, 256):
+        check_char = funct(prefix + discovered + chr(i), key)[offset*16:offset*16+16]
+        if check_char == output:
+            print "Char in {0} position = {1}".format(n, chr(i))
+            return chr(i)

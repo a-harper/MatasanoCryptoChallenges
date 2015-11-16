@@ -68,6 +68,6 @@ if crypto.score_ecb(crypto.encryption_oracle2(bytearray([0] * 47), key)) >= 1:
 
 discovered = ""
 for n in range(1, len(crypto.encryption_oracle2(b'', key)) + 1):
-    discovered += crypto.brute_ecb_character(crypto.encryption_oracle2, key, n, discovered)
+    discovered += crypto.brute_ecb_character2(crypto.encryption_oracle2, key, n, discovered)
 print discovered
 
