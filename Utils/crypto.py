@@ -155,10 +155,6 @@ def brute_ecb_character(funct, key, n, discovered=""):
                 print "Char in {0} position = {1}".format(n, chr(i))
                 return chr(i)
     else:
-        output = funct(b'', key)[0:n]
-        for i in range(0, 256):
-            check = funct(discovered + chr(i), key)[0:n]
-            if check == output:
-                print "Char in {0} position = {1}".format(n, chr(i))
-                return chr(i)
+        "Fuck it."
+
 
